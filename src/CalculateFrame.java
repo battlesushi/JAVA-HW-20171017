@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Random;
 
 public class CalculateFrame extends JFrame{
     private Container cp;
@@ -11,6 +12,9 @@ public class CalculateFrame extends JFrame{
     private JPanel jpn=new JPanel(new GridLayout(3,3));
     private JButton jbtn[]=new JButton[9];
     public LoginFrame loginFrame=new LoginFrame();
+    private Random rdm=new Random();
+    private int randomNum[] = new int[9];//亂數若重複_比對用
+    boolean flag=true;
     public CalculateFrame(LoginFrame login){
         loginFrame=login;
         init();
@@ -23,9 +27,27 @@ public class CalculateFrame extends JFrame{
         cp.add(jtf,BorderLayout.NORTH);
         cp.add(jpn,BorderLayout.CENTER);
         jtf.setHorizontalAlignment(jtf.RIGHT);
-        for(int i=0;i<jbtn.length;i++){
-            jbtn[i]= new JButton(Integer.toString(i));
+        for (int i = 0; i < 9; i++) {
+            if(i==0){
+                randomNum[i]=rdm.nextInt(9);//第一個亂數產生不需要比對
+            }
+            else {
+                while(flag){
+                    randomNum[i]=rdm.nextInt(9);
+                    for(int j=0;j<i;j++){
+                        if(randomNum[j]==randomNum[i]){
+                            flag=true;
+                            break;
+                        }
+                        flag=false;
+                    }
+                }
+            }
+            flag=true;
+            jbtn[i] = new JButton(Integer.toString(randomNum[i]));
             jpn.add(jbtn[i]);
+        }
+        for(int i=0;i<jbtn.length;i++){
             jbtn[i].addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
